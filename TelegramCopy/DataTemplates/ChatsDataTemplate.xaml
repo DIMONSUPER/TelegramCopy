@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+      xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+      xmlns:models="clr-namespace:TelegramCopy.Models"
+      xmlns:viewmodels="clr-namespace:TelegramCopy.ViewModels"
+      x:Class="TelegramCopy.DataTemplates.ChatsDataTemplate"
+      x:DataType="models:ChatInfo"
+      HeightRequest="100"
+      WidthRequest="100"
+      Padding="15">
+
+    <Grid.GestureRecognizers>
+        <TapGestureRecognizer Command="{Binding ChatTappedCommand, Source={RelativeSource AncestorType={x:Type viewmodels:MainPageViewModel}}}"
+                              CommandParameter="{Binding .}"/>
+    </Grid.GestureRecognizers>
+
+    <Grid.Triggers>
+        <DataTrigger Binding="{Binding IsSelected}" TargetType="Grid" Value="True">
+            <Setter Property="BackgroundColor" Value="#3F6B95"/>
+        </DataTrigger>
+    </Grid.Triggers>
+
+    <toolkit:AvatarView HeightRequest="70"
+                        WidthRequest="70"
+                        BorderWidth="1"
+                        ImageSource="{Binding Image}"
+                        CornerRadius="35"/>
+
+</Grid>
+

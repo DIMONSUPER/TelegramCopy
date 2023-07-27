@@ -1,42 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TelegramCopy.Views.MainPage">
+             xmlns:vms="clr-namespace:TelegramCopy.ViewModels"
+             xmlns:models="clr-namespace:TelegramCopy.Models"
+             xmlns:templates="clr-namespace:TelegramCopy.DataTemplates"
+             x:Class="TelegramCopy.Views.MainPage"
+             x:DataType="vms:MainPageViewModel">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
+    <Grid ColumnDefinitions="100, 1, *" BackgroundColor="#18222D">
 
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
+        <!-- CHAT LIST -->
+        <CollectionView Grid.Column="0"
+                        ItemsSource="{Binding Chats}"
+                        ItemsLayout="VerticalList"
+                        ItemSizingStrategy="MeasureFirstItem">
 
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ChatInfo">
+                    <templates:ChatsDataTemplate/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
 
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
+        </CollectionView>
 
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
+        <!-- LINE -->
+        <BoxView Grid.Column="1" Color="#22303F"/>
 
-        </VerticalStackLayout>
-    </ScrollView>
+        <!-- CHAT CONTENT -->
+        <Grid Grid.Column="2" BackgroundColor="#22303F">
+            <Frame Padding="10, 5"
+                   HasShadow="False"
+                   BackgroundColor="#18222D"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   BorderColor="#22303F"
+                   CornerRadius="12">
+
+                <Label Text="Select a chat to start messaging"
+                       FontSize="16"
+                       TextColor="#AFC3D4"/>
+
+            </Frame>
+        </Grid>
+    </Grid>
 
 </ContentPage>
 
