@@ -1,4 +1,4 @@
-﻿namespace TelegramCopy;
+﻿namespace TelegramCopy.Views;
 
 public partial class MainPage : ContentPage
 {

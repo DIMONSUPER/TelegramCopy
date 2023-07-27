@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using TelegramCopy.ViewModels;
+using TelegramCopy.Views;
 
 namespace TelegramCopy;
 
@@ -8,8 +10,13 @@ public static class MauiProgram
 	{
 		var builder = MauiApp.CreateBuilder();
 		builder
-			.UseMauiApp<App>()
-			.ConfigureFonts(fonts =>
+            .UseMauiApp<App>()
+            .UsePrism(configurePrism => configurePrism
+                .RegisterTypes(container => container
+                    .RegisterForNavigation<MainPage, MainPageViewModel>())
+                .OnAppStart(nameof(MainPage))
+            )
+            .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
