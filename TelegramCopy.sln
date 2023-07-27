@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1706.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramCopy", "TelegramCopy\TelegramCopy.csproj", "{B517C082-57D1-4220-96EF-11305DEFBF8E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B517C082-57D1-4220-96EF-11305DEFBF8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B517C082-57D1-4220-96EF-11305DEFBF8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B517C082-57D1-4220-96EF-11305DEFBF8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B517C082-57D1-4220-96EF-11305DEFBF8E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ED22701A-DC81-43EF-A72F-B8DB23BD5B57}
+	EndGlobalSection
+EndGlobal
