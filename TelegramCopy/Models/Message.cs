@@ -2,9 +2,11 @@
 
 namespace TelegramCopy.Models;
 
-public class Message : ObservableObject
+public partial class Message : ObservableObject
 {
     public int Id { get; set; }
+
+    public int ChatId { get; set; }
 
     public string Content { get; set; }
 

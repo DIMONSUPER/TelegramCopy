@@ -1,10 +1,11 @@
-﻿namespace TelegramCopy.Models;
+﻿using SQLite;
+
+namespace TelegramCopy.Models;
 
 public class ChatInfoDTO : IDTO
 {
+    [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
-    public string Image { get; set; }
-    public string Name { get; set; }
-    public int LastMessageId { get; set; }
+    public int SenderProfileId { get; set; }
 }
 

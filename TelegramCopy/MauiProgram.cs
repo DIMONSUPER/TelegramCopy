@@ -18,7 +18,6 @@ public static class MauiProgram
                 .RegisterTypes(container => container
                     .RegisterForNavigation<MainPage, MainPageViewModel>())
                 .RegisterTypes(container => container
-                    .RegisterSingleton<IMapperService, MapperService>()
                     .RegisterSingleton<IRepositoryService, RepositoryService>()
                     .RegisterSingleton<IChatService, ChatService>())
                 .OnAppStart(nameof(MainPage))

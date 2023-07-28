@@ -24,15 +24,22 @@ public partial class MainPageViewModel : BaseViewModel
     [ObservableProperty]
     private ChatInfo _selectedChat;
 
+    [ObservableProperty]
+    private string _messageText;
+
     #endregion
 
     #region -- Overrides --
 
-    public override void Initialize(INavigationParameters parameters)
+    public override async void Initialize(INavigationParameters parameters)
     {
         base.Initialize(parameters);
 
-        MockChats();
+        await _chatService.MockDatabaseAsync();
+
+        var chats = await _chatService.GetAllChatsAsync();
+
+        Chats = new(chats);
     }
 
     #endregion
@@ -52,18 +59,6 @@ public partial class MainPageViewModel : BaseViewModel
             SelectedChat = tappedChat;
             SelectedChat.IsSelected = true;
         }
-    }
-
-    private void MockChats()
-    {
-        Chats = new ObservableCollection<ChatInfo>
-        {
-            new ChatInfo() { Id = 1, Image = "dotnet_bot", Name = "Chat 1" },
-            new ChatInfo() { Id = 1, Image = "dotnet_bot", Name = "Chat 1" },
-            new ChatInfo() { Id = 1, Image = "dotnet_bot", Name = "Chat 1" },
-            new ChatInfo() { Id = 1, Image = "dotnet_bot", Name = "Chat 1" },
-            new ChatInfo() { Id = 1, Image = "dotnet_bot", Name = "Chat 1" },
-        };
     }
 
     #endregion

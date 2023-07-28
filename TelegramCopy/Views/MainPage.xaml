@@ -4,30 +4,35 @@
              xmlns:vms="clr-namespace:TelegramCopy.ViewModels"
              xmlns:models="clr-namespace:TelegramCopy.Models"
              xmlns:templates="clr-namespace:TelegramCopy.DataTemplates"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="TelegramCopy.Views.MainPage"
              x:DataType="vms:MainPageViewModel">
+
+    <!-- RESOURCES -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="chatsDataTemplate" x:DataType="models:ChatInfo">
+                <templates:ChatsDataTemplate/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid ColumnDefinitions="100, 1, *" BackgroundColor="#18222D">
 
         <!-- CHAT LIST -->
         <CollectionView Grid.Column="0"
+                        ItemTemplate="{StaticResource chatsDataTemplate}"
                         ItemsSource="{Binding Chats}"
                         ItemsLayout="VerticalList"
-                        ItemSizingStrategy="MeasureFirstItem">
-
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:ChatInfo">
-                    <templates:ChatsDataTemplate/>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-
-        </CollectionView>
+                        ItemSizingStrategy="MeasureFirstItem"/>
 
         <!-- LINE -->
         <BoxView Grid.Column="1" Color="#22303F"/>
 
-        <!-- CHAT CONTENT -->
-        <Grid Grid.Column="2" BackgroundColor="#22303F">
+        <!-- EMPTY CHAT CONTENT -->
+        <Grid Grid.Column="2"
+              BackgroundColor="#22303F"
+              IsVisible="{Binding SelectedChat, Converter={toolkit:IsNullConverter}}">
             <Frame Padding="10, 5"
                    HasShadow="False"
                    BackgroundColor="#18222D"
@@ -41,6 +46,97 @@
                        TextColor="#AFC3D4"/>
 
             </Frame>
+        </Grid>
+
+        <!-- NON-EMPTY CHAT CONTENT -->
+        <Grid Grid.Column="2"
+              BackgroundColor="#18222D"
+              IsVisible="{Binding SelectedChat, Converter={toolkit:IsNotNullConverter}}"
+              RowDefinitions="70, 1, *, 1, Auto">
+
+            <!-- AVATAR, NAME, LAST SEEN-->
+            <Grid ColumnDefinitions="50, *"
+                  ColumnSpacing="5"
+                  RowDefinitions="0.5*, 0.5*"
+                  Padding="20, 10">
+
+                <toolkit:AvatarView
+                    Grid.Column="0"
+                    Grid.RowSpan="2"
+                    BorderWidth="0"
+                    ImageSource="{Binding SelectedChat.Profile.Image, FallbackValue=dotnet_bot}"/>
+
+                <Label Grid.Column="1"
+                       Grid.Row="0"
+                       FontSize="18"
+                       TextColor="White"
+                       VerticalTextAlignment="Center"
+                       Text="{Binding SelectedChat.Profile.Nickname}"/>
+
+                <Label Grid.Column="1"
+                       Grid.Row="1"
+                       FontSize="16"
+                       TextColor="#AFC3D4"
+                       VerticalTextAlignment="Center"
+                       Text="last seen recently"/>
+
+            </Grid>
+
+            <!-- LINE -->
+            <BoxView Grid.Row="1" Color="#22303F"/>
+
+            <CollectionView Grid.Row="2"
+                            IsGrouped="True"
+                            ItemSizingStrategy="MeasureAllItems"
+                            ItemsSource="{Binding SelectedChat.MessageGroups}">
+
+                <CollectionView.GroupHeaderTemplate>
+                    <DataTemplate x:DataType="models:MessageGroup">
+                        <Label Text="{Binding Title}" FontSize="22"  TextColor="#006064" />
+                    </DataTemplate>
+                </CollectionView.GroupHeaderTemplate>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Message">
+                        <StackLayout Padding="8">
+                            <Label Text="{Binding Content}" FontSize="18"  />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <!-- LINE -->
+            <BoxView Grid.Row="3" Color="#22303F"/>
+
+            <!-- WRITE A MESSAGE -->
+            <Grid Grid.Row="4"
+                  Padding="20, 10"
+                  ColumnSpacing="20"
+                  VerticalOptions="End"
+                  ColumnDefinitions="*, 30">
+
+                <Editor Grid.Column="0"
+                        Placeholder="Write a message..."
+                        AutoSize="TextChanges"
+                        FontSize="18"
+                        PlaceholderColor="#AFC3D4"
+                        TextColor="White"
+                        VerticalTextAlignment="End"
+                        Text="{Binding MessageText}"/>
+
+                <!-- SEND ICON -->
+                <Image Grid.Column="1"
+                       HeightRequest="30"
+                       WidthRequest="30"
+                       Margin="0,0,0,10"
+                       HorizontalOptions="End"
+                       VerticalOptions="End"
+                       IsVisible="{Binding MessageText,Converter={toolkit:IsStringNotNullOrEmptyConverter}}"
+                       Source="send_icon.png"/>
+
+            </Grid>
+
         </Grid>
     </Grid>
 

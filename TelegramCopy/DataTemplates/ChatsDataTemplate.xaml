@@ -23,8 +23,8 @@
 
     <toolkit:AvatarView HeightRequest="70"
                         WidthRequest="70"
-                        BorderWidth="1"
-                        ImageSource="{Binding Image}"
+                        BorderWidth="0"
+                        ImageSource="{Binding Profile.Image, FallbackValue=dotnet_bot}"
                         CornerRadius="35"/>
 
 </Grid>

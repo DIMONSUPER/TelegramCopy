@@ -142,8 +142,9 @@ public class RepositoryService : IRepositoryService
         {
             var database = new SQLiteAsyncConnection(_lazySQLiteConnectionPath);
 
-            database.CreateTableAsync<Message>().Wait();
-            database.CreateTableAsync<ChatInfo>().Wait();
+            database.CreateTableAsync<ProfileDTO>().Wait();
+            database.CreateTableAsync<ChatInfoDTO>().Wait();
+            database.CreateTableAsync<MessageDTO>().Wait();
 
             return database;
         });
