@@ -25,7 +25,12 @@ public partial class MainPageViewModel : BaseViewModel
     private ChatInfo _selectedChat;
 
     [ObservableProperty]
+    private Profile _currentProfile;
+
+    [ObservableProperty]
     private string _messageText;
+
+    public event EventHandler<bool> ScrollToLastMessage;
 
     #endregion
 
@@ -37,6 +42,8 @@ public partial class MainPageViewModel : BaseViewModel
 
         await _chatService.MockDatabaseAsync();
 
+        CurrentProfile = await _chatService.GetCurrentProfileAsync();
+
         var chats = await _chatService.GetAllChatsAsync();
 
         Chats = new(chats);
@@ -46,8 +53,70 @@ public partial class MainPageViewModel : BaseViewModel
 
     #region -- Private helpers --
 
+    private void RequestScrollToLastMessage(bool isAnimated = false)
+    {
+        ScrollToLastMessage?.Invoke(this, isAnimated);
+    }
+
     [RelayCommand]
-    private void ChatTapped(ChatInfo tappedChat)
+    private async Task SendMessageTapped()
+    {
+        var message = new Message
+        {
+            ChatId = SelectedChat.Id,
+            SendDate = DateTime.Now,
+            Content = MessageText,
+            IsMyMessage = true,
+        };
+
+        var savedMessage = await _chatService.SendMessageAsync(message);
+
+        if (savedMessage is not null)
+        {
+            SelectedChat.AddMessage(savedMessage);
+            MessageText = string.Empty;
+            RequestScrollToLastMessage(true);
+        }
+
+        _ = GenerateAnswerAsync();
+    }
+
+    private Task GenerateAnswerAsync()
+    {
+        return Task.Run(async () =>
+        {
+            var oldSelectedChat = SelectedChat;
+            await Task.Delay(new Random().Next(2000, 10000));
+
+            var message = new Message
+            {
+                ChatId = oldSelectedChat.Id,
+                SendDate = DateTime.Now,
+                Content = "Answering you",
+                IsMyMessage = false,
+            };
+
+            var savedMessage = await _chatService.SendMessageAsync(message);
+
+            if (savedMessage is not null)
+            {
+                oldSelectedChat.AddMessage(savedMessage);
+
+                if (SelectedChat == oldSelectedChat)
+                {
+                    RequestScrollToLastMessage(true);
+                }
+                else
+                {
+                    oldSelectedChat.UnreadMessagesCount++;
+                    await _chatService.UpdateChatAsync(SelectedChat);
+                }
+            }
+        });
+    }
+
+    [RelayCommand]
+    private async Task ChatTapped(ChatInfo tappedChat)
     {
         if (SelectedChat is not null)
         {
@@ -58,6 +127,14 @@ public partial class MainPageViewModel : BaseViewModel
         {
             SelectedChat = tappedChat;
             SelectedChat.IsSelected = true;
+            MessageText = string.Empty;
+            RequestScrollToLastMessage();
+
+            if (SelectedChat.UnreadMessagesCount > 0)
+            {
+                SelectedChat.UnreadMessagesCount = 0;
+                await _chatService.UpdateChatAsync(SelectedChat);
+            }
         }
     }
 

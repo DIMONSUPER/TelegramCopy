@@ -58,6 +58,10 @@
 	  <None Remove="Resources\Images\avatar_3.jpeg" />
 	  <None Remove="Resources\Images\avatar_2.jpeg" />
 	  <None Remove="Resources\Images\send_icon.png" />
+	  <None Remove="Helpers\" />
+	  <None Remove="Resources\Images\avatar_0.png" />
+	  <None Remove="Converters\" />
+	  <None Remove="Controls\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Views\" />
@@ -66,6 +70,9 @@
 	  <Folder Include="DataTemplates\" />
 	  <Folder Include="Services\" />
 	  <Folder Include="Extensions\" />
+	  <Folder Include="Helpers\" />
+	  <Folder Include="Converters\" />
+	  <Folder Include="Controls\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="Resources\Images\avatar_1.jpeg" />
@@ -74,5 +81,6 @@
 	  <BundleResource Include="Resources\Images\avatar_3.jpeg" />
 	  <BundleResource Include="Resources\Images\avatar_2.jpeg" />
 	  <BundleResource Include="Resources\Images\send_icon.png" />
+	  <BundleResource Include="Resources\Images\avatar_0.png" />
 	</ItemGroup>
 </Project>

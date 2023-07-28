@@ -7,7 +7,7 @@ namespace TelegramCopy.Services;
 public class RepositoryService : IRepositoryService
 {
     private readonly Lazy<SQLiteAsyncConnection> _lazySQLiteConnection;
-    private readonly string _lazySQLiteConnectionPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Constants.DATABASE_NAME);
+    private readonly string _databasePath = Path.Combine(FileSystem.AppDataDirectory, Constants.DATABASE_NAME);
 
     public RepositoryService()
     {
@@ -44,24 +44,30 @@ public class RepositoryService : IRepositoryService
     public async Task<int> SaveAsync<T>(T entity)
         where T : class, IDTO, new()
     {
-        var row = -1;
+        var id = -1;
 
         if (entity is not null)
         {
-            row = await _lazySQLiteConnection.Value.InsertAsync(entity);
+            var row = await _lazySQLiteConnection.Value.InsertAsync(entity);
+
+            if (row != -1)
+            {
+                id = entity.Id;
+            }
         }
 
-        return row;
+        return id;
     }
 
     public async Task<int> SaveOrUpdateAsync<T>(T entity)
         where T : class, IDTO, new()
     {
-        var row = -1;
+        var id = -1;
 
         if (entity is not null)
         {
             var existEntity = await GetSingleByIdAsync<T>(entity.Id);
+            int row;
 
             if (existEntity is null)
             {
@@ -72,9 +78,14 @@ public class RepositoryService : IRepositoryService
                 entity.Id = existEntity.Id;
                 row = await _lazySQLiteConnection.Value.UpdateAsync(entity);
             }
+
+            if (row != -1)
+            {
+                id = entity.Id;
+            }
         }
 
-        return row;
+        return id;
     }
 
     public async Task DeleteAsync<T>(T entity)
@@ -140,7 +151,7 @@ public class RepositoryService : IRepositoryService
     {
         return new(() =>
         {
-            var database = new SQLiteAsyncConnection(_lazySQLiteConnectionPath);
+            var database = new SQLiteAsyncConnection(_databasePath);
 
             database.CreateTableAsync<ProfileDTO>().Wait();
             database.CreateTableAsync<ChatInfoDTO>().Wait();

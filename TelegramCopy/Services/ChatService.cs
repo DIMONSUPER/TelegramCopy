@@ -44,12 +44,77 @@ public class ChatService : IChatService
         return result;
     }
 
+    public async Task<ChatInfo> UpdateChatAsync(ChatInfo chat)
+    {
+        ChatInfo result = null;
+
+        try
+        {
+            var id = await _repositoryService.SaveOrUpdateAsync(chat.ToDTO());
+
+            if (id != -1)
+            {
+                result = (await _repositoryService.GetSingleByIdAsync<ChatInfoDTO>(id))?.ToChatInfo(chat.Profile, chat.Messages);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Message was not saved");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"{nameof(SendMessageAsync)}: {ex.Message}");
+        }
+
+        return result;
+    }
+
+    //TODO: move to profile service
+    public async Task<Profile> GetCurrentProfileAsync()
+    {
+        Profile result = null;
+
+        try
+        {
+            result = (await _repositoryService.GetSingleByIdAsync<ProfileDTO>(Constants.CURRENT_USER_ID))?.ToProfile();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"{nameof(GetCurrentProfileAsync)}: {ex.Message}");
+        }
+
+        return result;
+    }
+
+    //TODO: move to message service
+    public async Task<Message> SendMessageAsync(Message message)
+    {
+        Message result = null;
+
+        try
+        {
+            var id = await _repositoryService.SaveAsync(message.ToDTO());
+
+            if (id != -1)
+            {
+                result = (await _repositoryService.GetSingleByIdAsync<MessageDTO>(id))?.ToMessage();
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Message was not saved");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"{nameof(SendMessageAsync)}: {ex.Message}");
+        }
+
+        return result;
+    }
+
+    //TODO: move to mock service
     public async Task MockDatabaseAsync()
     {
-        /*await _repositoryService.DeleteAllAsync<ProfileDTO>();
-        await _repositoryService.DeleteAllAsync<MessageDTO>();
-        await _repositoryService.DeleteAllAsync<ChatInfoDTO>();*/
-
         var profiles = await _repositoryService.GetAllAsync<ProfileDTO>();
 
         if (!profiles.Any())
@@ -78,7 +143,7 @@ public class ChatService : IChatService
     {
         var profiles = new List<ProfileDTO>
         {
-            new() { Image = "dotnet_bot", Nickname = "Dmytro Fedchenko", LastOnline = DateTime.Now.AddHours(-7) },
+            new() { Image = "avatar_0.png", Nickname = "Dmytro Fedchenko", LastOnline = DateTime.Now.AddHours(-7) },
             new() { Image = "avatar_1.jpeg", Nickname = "Emilly Watson", LastOnline = DateTime.Now.AddHours(-20) },
             new() { Image = "avatar_2.jpeg", Nickname = "Anatoly Shpak", LastOnline = DateTime.Now.AddHours(-40) },
             new() { Image = "avatar_3.jpeg", Nickname = "Dmytro Lebovskiy", LastOnline = DateTime.Now.AddHours(-1) },
@@ -93,15 +158,15 @@ public class ChatService : IChatService
     {
         var messages = new List<MessageDTO>
         {
-            new() { ChatId = 1, Content = "Hello", SendDate = DateTime.Now.AddDays(-1) },
-            new() { ChatId = 1, Content = "Are you listening?", SendDate = DateTime.Now.AddHours(-23) },
-            new() { ChatId = 1, Content = "Yes", SendDate = DateTime.Now.AddHours(-22) },
-            new() { ChatId = 1, Content = "So listen...", SendDate = DateTime.Now.AddHours(-21) },
+            new() { ChatId = 1, IsMyMessage = false, Content = "Hello", SendDate = DateTime.Now.AddDays(-1) },
+            new() { ChatId = 1, IsMyMessage = false, Content = "Are you listening?", SendDate = DateTime.Now.AddHours(-3) },
+            new() { ChatId = 1, IsMyMessage = true, Content = "Yes", SendDate = DateTime.Now.AddHours(-2) },
+            new() { ChatId = 1, IsMyMessage = false, Content = "So listen...", SendDate = DateTime.Now.AddHours(-1) },
 
-            new() { ChatId = 2, Content = "Hi", SendDate = DateTime.Now.AddDays(-1) },
-            new() { ChatId = 3, Content = "Hi", SendDate = DateTime.Now.AddDays(-1) },
-            new() { ChatId = 4, Content = "Hi", SendDate = DateTime.Now.AddDays(-1) },
-            new() { ChatId = 5, Content = "Hi", SendDate = DateTime.Now.AddDays(-1) },
+            new() { ChatId = 2, IsMyMessage = false, Content = "Hi", SendDate = DateTime.Now.AddDays(-1) },
+            new() { ChatId = 3, IsMyMessage = false, Content = "Hi", SendDate = DateTime.Now.AddDays(-4) },
+            new() { ChatId = 4, IsMyMessage = false, Content = "Hi", SendDate = DateTime.Now.AddDays(-2) },
+            new() { ChatId = 5, IsMyMessage = false, Content = "Hi", SendDate = DateTime.Now.AddDays(-3) },
         };
 
         return _repositoryService.SaveOrUpdateRangeAsync(messages);

@@ -32,6 +32,7 @@ public static class DTOExtension
         {
             Id = chat.Id,
             SenderProfileId = chat.Profile.Id,
+            UnreadMessagesCount = chat.UnreadMessagesCount,
         };
     }
 
@@ -42,6 +43,7 @@ public static class DTOExtension
             Id = chat.Id,
             Profile = profile,
             Messages = new(messages),
+            UnreadMessagesCount = chat.UnreadMessagesCount,
         };
     }
 
@@ -53,6 +55,7 @@ public static class DTOExtension
             SendDate = message.SendDate,
             Content = message.Content,
             ChatId = message.ChatId,
+            IsMyMessage = message.IsMyMessage,
         };
     }
 
@@ -64,6 +67,7 @@ public static class DTOExtension
             SendDate = message.SendDate,
             Content = message.Content,
             ChatId = message.ChatId,
+            IsMyMessage = message.IsMyMessage,
         };
     }
 }

@@ -27,5 +27,23 @@
                         ImageSource="{Binding Profile.Image, FallbackValue=dotnet_bot}"
                         CornerRadius="35"/>
 
+    <Grid VerticalOptions="End"
+          HorizontalOptions="End"
+          WidthRequest="24"
+          HeightRequest="24"
+          IsVisible="{Binding UnreadMessagesCount, Converter={toolkit:IntToBoolConverter}}">
+
+        <Ellipse Fill="#3294DD"
+                 Stroke="Black"
+                 StrokeThickness="4"/>
+
+        <Label FontSize="14"
+               VerticalTextAlignment="Center"
+               HorizontalTextAlignment="Center"
+               TextColor="Black"
+               FontAttributes="Bold"
+               Text="{Binding UnreadMessagesCount}"/>
+    </Grid>
+
 </Grid>
 

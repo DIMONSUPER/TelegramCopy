@@ -7,5 +7,6 @@ public class ChatInfoDTO : IDTO
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
     public int SenderProfileId { get; set; }
+    public int UnreadMessagesCount { get; set; }
 }
 
