@@ -6,7 +6,7 @@ public interface IChatService
 {
     Task<IEnumerable<ChatInfo>> GetAllChatsAsync();
 
-    Task<ChatInfo> UpdateChatAsync(ChatInfo chat);
+    Task<bool> UpdateChatAsync(ChatInfo chat);
 
     Task<Message> SendMessageAsync(Message message);
 

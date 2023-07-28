@@ -44,26 +44,19 @@ public class ChatService : IChatService
         return result;
     }
 
-    public async Task<ChatInfo> UpdateChatAsync(ChatInfo chat)
+    public async Task<bool> UpdateChatAsync(ChatInfo chat)
     {
-        ChatInfo result = null;
+        bool result = false;
 
         try
         {
             var id = await _repositoryService.SaveOrUpdateAsync(chat.ToDTO());
 
-            if (id != -1)
-            {
-                result = (await _repositoryService.GetSingleByIdAsync<ChatInfoDTO>(id))?.ToChatInfo(chat.Profile, chat.Messages);
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Message was not saved");
-            }
+            result = id != -1;
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"{nameof(SendMessageAsync)}: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"{nameof(UpdateChatAsync)}: {ex.Message}");
         }
 
         return result;

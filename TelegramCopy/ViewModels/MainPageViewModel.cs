@@ -109,7 +109,7 @@ public partial class MainPageViewModel : BaseViewModel
                 else
                 {
                     oldSelectedChat.UnreadMessagesCount++;
-                    await _chatService.UpdateChatAsync(SelectedChat);
+                    var result = await _chatService.UpdateChatAsync(oldSelectedChat);
                 }
             }
         });
